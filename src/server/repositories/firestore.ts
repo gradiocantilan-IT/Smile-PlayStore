@@ -1,7 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import type { Query, DocumentData } from 'firebase-admin/firestore';
-import { getFirebaseAdmin } from '../firebase/admin.ts';
+import type { Query, DocumentData, Firestore } from 'firebase-admin/firestore';
+import {
+  getFirebaseAdmin,
+  isFirestoreOperational,
+  shouldAttemptFirestore,
+  markFirestoreUnavailable,
+} from '../firebase/admin.ts';
 import {
   AppRecord,
   AppStatus,
@@ -33,7 +38,7 @@ const DEFAULT_CMS_SETTINGS: CmsSettings = {
   updatedBy: 'system',
 };
 
-// Local storage path for dev persistence
+// Local storage path for dev and offline persistence
 const DATA_DIR = path.resolve(process.cwd(), '.data');
 const LOCAL_STORE_FILE = path.join(DATA_DIR, 'smile_store_db.json');
 
@@ -80,17 +85,26 @@ function saveLocalStore(data: LocalDatabaseSchema): void {
     }
     fs.writeFileSync(LOCAL_STORE_FILE, JSON.stringify(data, null, 2), 'utf-8');
   } catch (err) {
-    console.error('Failed to write local database file:', err);
+    console.warn('Notice: Failed to write local database file:', (err as Error).message);
   }
 }
 
 export class AppRepository {
   /**
+   * Safe getter that checks whether Firestore is operational before returning DB client
+   */
+  private static async getDb(): Promise<Firestore | null> {
+    const operational = await isFirestoreOperational();
+    if (!operational) return null;
+    const { db } = getFirebaseAdmin();
+    return db;
+  }
+
+  /**
    * Returns whether database is connected to live production Firestore
    */
   static isFirestoreLive(): boolean {
-    const { isConfigured, db } = getFirebaseAdmin();
-    return Boolean(isConfigured && db);
+    return shouldAttemptFirestore();
   }
 
   static getDatabaseMode(): 'production_firestore' | 'local_persistent_file' {
@@ -106,7 +120,7 @@ export class AppRepository {
     search?: string;
     limit?: number;
   }): Promise<AppRecord[]> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -133,9 +147,12 @@ export class AppRepository {
           );
         }
 
-        return apps.sort((a: AppRecord, b: AppRecord) => new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime());
+        return apps.sort(
+          (a: AppRecord, b: AppRecord) =>
+            new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime()
+        );
       } catch (err) {
-        console.error('Firestore getPublishedApps error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -166,7 +183,7 @@ export class AppRepository {
   }
 
   static async getAppBySlug(slug: string): Promise<AppRecord | null> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -176,7 +193,7 @@ export class AppRepository {
           return { id: doc.id, ...doc.data() } as AppRecord;
         }
       } catch (err) {
-        console.error('Firestore getAppBySlug error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -186,7 +203,7 @@ export class AppRepository {
   }
 
   static async getAppById(id: string): Promise<AppRecord | null> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -195,7 +212,7 @@ export class AppRepository {
           return { id: doc.id, ...doc.data() } as AppRecord;
         }
       } catch (err) {
-        console.error('Firestore getAppById error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -204,7 +221,7 @@ export class AppRepository {
   }
 
   static async getAllAppsForAdmin(status?: AppStatus): Promise<AppRecord[]> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -216,7 +233,7 @@ export class AppRepository {
         const apps: AppRecord[] = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as AppRecord));
         return apps.sort((a: AppRecord, b: AppRecord) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
       } catch (err) {
-        console.error('Firestore getAllAppsForAdmin error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -242,13 +259,13 @@ export class AppRepository {
       updatedAt: now,
     };
 
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
     if (db) {
       try {
         await db.collection('apps').doc(id).set(newApp);
         return newApp;
       } catch (err) {
-        console.error('Firestore createApp error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -260,7 +277,7 @@ export class AppRepository {
 
   static async updateApp(id: string, updates: Partial<AppRecord>): Promise<AppRecord | null> {
     const now = new Date().toISOString();
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -276,7 +293,7 @@ export class AppRepository {
           return updated;
         }
       } catch (err) {
-        console.error('Firestore updateApp error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -296,14 +313,14 @@ export class AppRepository {
   }
 
   static async deleteApp(id: string): Promise<boolean> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
         await db.collection('apps').doc(id).delete();
         return true;
       } catch (err) {
-        console.error('Firestore deleteApp error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -317,7 +334,7 @@ export class AppRepository {
   }
 
   static async incrementAppDownloadCount(id: string): Promise<number> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -329,7 +346,7 @@ export class AppRepository {
           return current;
         }
       } catch (err) {
-        console.error('Firestore incrementAppDownloadCount error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -376,7 +393,7 @@ export class AppRepository {
   // ---------------------------------------------------------------------------
 
   static async getCmsSettings(): Promise<CmsSettings> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -385,7 +402,7 @@ export class AppRepository {
           return doc.data() as CmsSettings;
         }
       } catch (err) {
-        console.error('Firestore getCmsSettings error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -406,13 +423,13 @@ export class AppRepository {
       updatedBy,
     };
 
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
     if (db) {
       try {
         await db.collection('cmsSettings').doc('global').set(updated, { merge: true });
         return updated;
       } catch (err) {
-        console.error('Firestore updateCmsSettings error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -433,13 +450,13 @@ export class AppRepository {
       timestamp: new Date().toISOString(),
     };
 
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
     if (db) {
       try {
         await db.collection('auditLogs').doc(entry.id).set(entry);
         return entry;
       } catch (err) {
-        console.error('Firestore addAuditLog error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -454,7 +471,7 @@ export class AppRepository {
   }
 
   static async getAuditLogs(limitCount = 100): Promise<AuditLogRecord[]> {
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -465,7 +482,7 @@ export class AppRepository {
           .get();
         return snapshot.docs.map((d: any) => ({ id: d.id, ...d.data() } as AuditLogRecord));
       } catch (err) {
-        console.error('Firestore getAuditLogs error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -479,7 +496,7 @@ export class AppRepository {
 
   static async getUserByEmail(email: string): Promise<AdminUser | null> {
     const normalizedEmail = email.toLowerCase().trim();
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
 
     if (db) {
       try {
@@ -493,7 +510,7 @@ export class AppRepository {
           return { uid: doc.id, ...doc.data() } as AdminUser;
         }
       } catch (err) {
-        console.error('Firestore getUserByEmail error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 
@@ -514,13 +531,13 @@ export class AppRepository {
       lastLoginAt: now,
     };
 
-    const { db } = getFirebaseAdmin();
+    const db = await this.getDb();
     if (db) {
       try {
         await db.collection('users').doc(updatedUser.uid).set(updatedUser, { merge: true });
         return updatedUser;
       } catch (err) {
-        console.error('Firestore upsertUser error:', err);
+        markFirestoreUnavailable(err);
       }
     }
 

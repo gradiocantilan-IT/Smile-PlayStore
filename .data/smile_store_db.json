@@ -29,6 +29,36 @@
       "details": {
         "verified": true
       },
+      "id": "log_1791586839878_y7jair",
+      "timestamp": "2026-10-09T23:00:39.878Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791586690066_yo3kzj",
+      "timestamp": "2026-10-09T22:58:10.066Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791586346405_ya05tk",
+      "timestamp": "2026-10-09T22:52:26.405Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
       "id": "log_1791585734279_h0nyvb",
       "timestamp": "2026-10-09T22:42:14.279Z"
     },

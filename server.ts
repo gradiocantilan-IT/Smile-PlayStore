@@ -4,6 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { apiRouter } from './src/server/api/router.ts';
 import { config } from './src/server/config.ts';
+import { isFirestoreOperational } from './src/server/firebase/admin.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,9 +48,12 @@ async function startServer() {
     }
   }
 
+  // Probe Firestore readiness once on boot
+  const firestoreLive = await isFirestoreOperational();
+
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Smile Store server running on http://0.0.0.0:${PORT}`);
-    console.log(`Database Mode: ${config.firebase.isConfigured ? 'Production Firestore' : 'Local Persistent Database'}`);
+    console.log(`Smile PlayStore server running on http://0.0.0.0:${PORT}`);
+    console.log(`Database Mode: ${firestoreLive ? 'Production Firestore' : 'Local Persistent Database'}`);
     console.log(`Cloudflare R2: ${config.r2.isConfigured ? 'Connected' : 'Local Buffer Cache'}`);
     console.log(`Admin Allowlist: ${config.adminEmailAllowlist.join(', ')}`);
   });
