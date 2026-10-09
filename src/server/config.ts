@@ -42,7 +42,7 @@ export const config: ServerConfig = {
   maxApkSizeMb: Number(process.env.MAX_APK_SIZE_MB) || 150,
   adminEmailAllowlist: parseAllowlist(process.env.ADMIN_EMAIL_ALLOWLIST),
   firebase: {
-    projectId: process.env.FIREBASE_PROJECT_ID || 'karaoke-night-488916',
+    projectId: process.env.FIREBASE_PROJECT_ID || 'smile-playstore',
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')

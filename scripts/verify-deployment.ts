@@ -29,7 +29,7 @@ async function runLiveVerification(): Promise<void> {
   // 1. FIREBASE & AUTHENTICATION
   // ---------------------------------------------------------------------------
   console.log('[1/6] Verifying Firebase Project and Google Sign-in...');
-  const isTargetProject = firebaseConfig.projectId === 'karaoke-night-488916';
+  const isTargetProject = firebaseConfig.projectId === 'smile-playstore';
   const hasDbId = Boolean(firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId.includes('ai-studio-smilestoreandroi'));
   const hasClientAuth = fs.existsSync(path.resolve(process.cwd(), 'src/lib/firebase/client.ts'));
 
@@ -38,7 +38,7 @@ async function runLiveVerification(): Promise<void> {
     passed: isTargetProject,
     message: isTargetProject
       ? `Using intended target project: ${firebaseConfig.projectId}`
-      : `Mismatch: Expected karaoke-night-488916, got ${firebaseConfig.projectId}`,
+      : `Mismatch: Expected smile-playstore, got ${firebaseConfig.projectId}`,
   });
 
   results.push({

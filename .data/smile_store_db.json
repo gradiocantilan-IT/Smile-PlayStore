@@ -29,6 +29,16 @@
       "details": {
         "verified": true
       },
+      "id": "log_1791587624374_qogmzj",
+      "timestamp": "2026-10-09T23:13:44.374Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
       "id": "log_1791586839878_y7jair",
       "timestamp": "2026-10-09T23:00:39.878Z"
     },
