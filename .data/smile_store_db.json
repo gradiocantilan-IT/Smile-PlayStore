@@ -1,0 +1,88 @@
+{
+  "apps": {},
+  "categories": {},
+  "cmsSettings": {
+    "siteName": "Smile Store",
+    "tagline": "Android App Marketplace",
+    "announcement": "",
+    "maxUploadSizeMb": 150,
+    "allowedCategories": [
+      "Tools & Utilities",
+      "Productivity",
+      "Communication",
+      "Entertainment",
+      "Education",
+      "Finance",
+      "Health & Fitness",
+      "Lifestyle"
+    ],
+    "contactEmail": "security@smilestore.app",
+    "maintenanceMode": false,
+    "updatedAt": "2026-10-09T21:38:40.383Z",
+    "updatedBy": "system"
+  },
+  "auditLogs": [
+    {
+      "actorEmail": "intruder@evil.com",
+      "action": "ADMIN_LOGIN_REJECTED_UNAUTHORIZED",
+      "targetType": "auth",
+      "details": {
+        "reason": "Email not present in ADMIN_EMAIL_ALLOWLIST"
+      },
+      "ipAddress": "127.0.0.1",
+      "id": "log_1791582063517_l1swtx",
+      "timestamp": "2026-10-09T21:41:03.517Z"
+    },
+    {
+      "actorEmail": "admin@smilestore.app",
+      "action": "ADMIN_LOGIN_SUCCESSFUL",
+      "targetType": "auth",
+      "targetId": "usr_1791582060106_ihbpoj",
+      "details": {
+        "role": "admin"
+      },
+      "ipAddress": "127.0.0.1",
+      "id": "log_1791582060107_p9x3xg",
+      "timestamp": "2026-10-09T21:41:00.107Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791582023432_p16dl8",
+      "timestamp": "2026-10-09T21:40:23.432Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791581932735_lkfhwb",
+      "timestamp": "2026-10-09T21:38:52.735Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791581920398_e6w6ou",
+      "timestamp": "2026-10-09T21:38:40.398Z"
+    }
+  ],
+  "users": {
+    "admin@smilestore.app": {
+      "uid": "usr_1791582060106_ihbpoj",
+      "email": "admin@smilestore.app",
+      "role": "admin",
+      "createdAt": "2026-10-09T21:41:00.106Z",
+      "lastLoginAt": "2026-10-09T21:41:00.106Z"
+    }
+  }
+}

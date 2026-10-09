@@ -1,0 +1,6 @@
+{
+  "name": "Smile Store - Android APK Marketplace",
+  "description": "Secure, mobile-first cloud Android APK marketplace with verified cryptographic signatures, real Cloudflare R2 storage, and administrator publication controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
