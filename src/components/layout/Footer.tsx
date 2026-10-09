@@ -17,14 +17,20 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand info */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#FF7A00] flex items-center justify-center text-white">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M8 14c1.5 2 6.5 2 8 0" />
-                </svg>
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg overflow-hidden bg-[#FFF7F0] border border-[#FFE2CC] flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="Smile PlayStore Logo"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-contain p-0.5"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      'https://raw.githubusercontent.com/gradiocantilan-IT/LocalDocument/main/orangeware.png';
+                  }}
+                />
               </div>
-              <span className="text-base font-bold text-[#202124]">Smile Store</span>
+              <span className="text-base font-bold text-[#202124]">Smile PlayStore</span>
             </div>
             <p className="text-xs text-[#6B7280] mt-1 max-w-sm">
               Independent cloud Android marketplace with verified cryptographic signatures and private object storage.
@@ -64,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         <div className="border-t border-[#F3F4F6] mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#9CA3AF]">
-          <p>© {new Date().getFullYear()} Smile Store. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Smile PlayStore. All rights reserved.</p>
           <p>Not affiliated with or endorsed by Google LLC or Android Open Source Project.</p>
         </div>
       </div>

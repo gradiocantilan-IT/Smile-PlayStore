@@ -1,0 +1,102 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'gradiocantilan@gmail.com' ||
+        request.auth.token.email == 'admin@smilestore.app' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Application packages
+    match /apps/{appId} {
+      allow get: if isValidId(appId) && (
+        (resource.data.status == 'published' && resource.data.signatureVerified == true) ||
+        isAdmin()
+      );
+
+      allow list: if (
+        (resource.data.status == 'published' && resource.data.signatureVerified == true) ||
+        isAdmin()
+      );
+
+      // Writes restricted exclusively to authorized administrators
+      allow create: if isValidId(appId) && isAdmin() &&
+        incoming().keys().hasAll(['id', 'slug', 'title', 'developerName', 'status', 'signatureVerified', 'createdAt']) &&
+        incoming().title is string && incoming().title.size() <= 128 &&
+        incoming().developerName is string && incoming().developerName.size() <= 128 &&
+        incoming().status in ['draft', 'pending', 'published', 'rejected', 'archived'];
+
+      allow update: if isValidId(appId) && isAdmin() &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        // Security gate: cannot be published without signature verification
+        (incoming().status != 'published' || incoming().signatureVerified == true);
+
+      allow delete: if isValidId(appId) && isAdmin();
+    }
+
+    // Catalog Categories
+    match /categories/{categoryId} {
+      allow read: if isValidId(categoryId);
+      allow write: if isValidId(categoryId) && isAdmin();
+    }
+
+    // CMS Marketplace Settings
+    match /cmsSettings/{settingId} {
+      allow read: if isValidId(settingId);
+      allow write: if isValidId(settingId) && isAdmin();
+    }
+
+    // Immutable Audit Logs
+    match /auditLogs/{logId} {
+      allow read: if isValidId(logId) && isAdmin();
+      allow create: if isValidId(logId) && (isAdmin() || isSignedIn()) &&
+        incoming().keys().hasAll(['id', 'timestamp', 'actorEmail', 'action', 'targetType']);
+      allow update, delete: if false; // Audit logs are immutable
+    }
+
+    // User accounts
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isValidId(userId) && request.auth.uid == userId &&
+        incoming().role == 'admin' ? isAdmin() : true;
+      allow update: if isValidId(userId) && (
+        isAdmin() ||
+        (request.auth.uid == userId && incoming().diff(existing()).affectedKeys().hasOnly(['lastLoginAt']))
+      );
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // Admins allowlist
+    match /admins/{adminId} {
+      allow read, write: if isValidId(adminId) && isAdmin();
+    }
+  }
+}

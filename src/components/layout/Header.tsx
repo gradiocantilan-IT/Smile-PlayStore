@@ -25,27 +25,22 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-hidden"
           aria-label="Smile Store Home"
         >
-          {/* Custom Smile Store Logo */}
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF7A00] to-[#FF9F43] flex items-center justify-center shadow-sm text-white shrink-0 group-hover:scale-105 transition-transform duration-200">
-            <svg
-              className="w-6 h-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {/* Android smiling face */}
-              <circle cx="12" cy="12" r="9" />
-              <path d="M8 14c1.5 2 6.5 2 8 0" />
-              <line x1="9" y1="9" x2="9.01" y2="9" strokeWidth="3" />
-              <line x1="15" y1="9" x2="15.01" y2="9" strokeWidth="3" />
-            </svg>
+          {/* Custom Smile PlayStore Logo */}
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FFF7F0] border border-[#FFE2CC] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-2xs">
+            <img
+              src="/logo.png"
+              alt="Smile PlayStore Logo"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-contain p-0.5"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  'https://raw.githubusercontent.com/gradiocantilan-IT/LocalDocument/main/orangeware.png';
+              }}
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-bold tracking-tight text-[#202124] leading-tight">
-              Smile <span className="text-[#FF7A00]">Store</span>
+              Smile <span className="text-[#FF7A00]">PlayStore</span>
             </span>
             <span className="text-[11px] font-medium text-[#6B7280] hidden sm:inline leading-none">
               Android Marketplace

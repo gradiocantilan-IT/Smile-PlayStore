@@ -13,7 +13,7 @@ import {
 
 // Default CMS settings
 const DEFAULT_CMS_SETTINGS: CmsSettings = {
-  siteName: 'Smile Store',
+  siteName: 'Smile PlayStore',
   tagline: 'Android App Marketplace',
   announcement: '',
   maxUploadSizeMb: 150,

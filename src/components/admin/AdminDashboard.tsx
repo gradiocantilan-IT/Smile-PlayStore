@@ -285,12 +285,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <div className="bg-white border-b border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FF7A00] flex items-center justify-center text-white shadow-xs">
-              <Shield className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FFF7F0] border border-[#FFE2CC] flex items-center justify-center shadow-xs shrink-0">
+              <img
+                src="/logo.png"
+                alt="Smile PlayStore"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-contain p-0.5"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    'https://raw.githubusercontent.com/gradiocantilan-IT/LocalDocument/main/orangeware.png';
+                }}
+              />
             </div>
             <div>
               <h1 className="text-lg font-bold text-[#202124] leading-tight">
-                Smile Store Admin Console
+                Smile PlayStore Admin Console
               </h1>
               <p className="text-xs text-[#6B7280]">
                 Logged in as <span className="font-semibold text-[#202124]">{user.email}</span> ({user.role})

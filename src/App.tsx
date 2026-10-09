@@ -265,10 +265,19 @@ export default function App() {
               />
             ) : (
               <div className="py-20 text-center max-w-md mx-auto px-4">
-                <div className="w-16 h-16 rounded-2xl bg-[#FFF7F0] text-[#FF7A00] flex items-center justify-center mx-auto mb-4">
-                  <ShieldCheck className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#FFF7F0] border border-[#FFE2CC] flex items-center justify-center mx-auto mb-4 p-1">
+                  <img
+                    src="/logo.png"
+                    alt="Smile PlayStore"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        'https://raw.githubusercontent.com/gradiocantilan-IT/LocalDocument/main/orangeware.png';
+                    }}
+                  />
                 </div>
-                <h2 className="text-xl font-bold text-[#202124]">Administrator Console</h2>
+                <h2 className="text-xl font-bold text-[#202124]">Smile PlayStore Admin Console</h2>
                 <p className="text-xs text-[#6B7280] mt-2 mb-6">
                   Please sign in with an authorized email address to manage uploads and review cryptographic APK signatures.
                 </p>

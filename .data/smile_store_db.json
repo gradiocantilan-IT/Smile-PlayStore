@@ -2,7 +2,7 @@
   "apps": {},
   "categories": {},
   "cmsSettings": {
-    "siteName": "Smile Store",
+    "siteName": "Smile PlayStore",
     "tagline": "Android App Marketplace",
     "announcement": "",
     "maxUploadSizeMb": 150,
@@ -22,6 +22,46 @@
     "updatedBy": "system"
   },
   "auditLogs": [
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791585734279_h0nyvb",
+      "timestamp": "2026-10-09T22:42:14.279Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791585710279_o8fp44",
+      "timestamp": "2026-10-09T22:41:50.279Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791584933988_7a7ux6",
+      "timestamp": "2026-10-09T22:28:53.988Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791584904106_jdro1g",
+      "timestamp": "2026-10-09T22:28:24.106Z"
+    },
     {
       "actorEmail": "intruder@evil.com",
       "action": "ADMIN_LOGIN_REJECTED_UNAUTHORIZED",

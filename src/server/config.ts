@@ -25,11 +25,13 @@ export interface ServerConfig {
 }
 
 const parseAllowlist = (raw?: string): string[] => {
-  if (!raw) return ['admin@smilestore.app', 'gradiocantilan@gmail.com'];
-  return raw
+  const defaults = ['admin@smilestore.app', 'gradiocantilan@gmail.com'];
+  if (!raw || !raw.trim()) return defaults;
+  const parsed = raw
     .split(',')
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
+  return Array.from(new Set([...defaults, ...parsed]));
 };
 
 export const config: ServerConfig = {
@@ -40,7 +42,7 @@ export const config: ServerConfig = {
   maxApkSizeMb: Number(process.env.MAX_APK_SIZE_MB) || 150,
   adminEmailAllowlist: parseAllowlist(process.env.ADMIN_EMAIL_ALLOWLIST),
   firebase: {
-    projectId: process.env.FIREBASE_PROJECT_ID,
+    projectId: process.env.FIREBASE_PROJECT_ID || 'karaoke-night-488916',
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')

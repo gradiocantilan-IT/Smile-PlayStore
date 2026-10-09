@@ -12,25 +12,18 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div className="py-16 px-4 text-center max-w-lg mx-auto">
-      {/* Friendly warm illustration */}
-      <div className="w-24 h-24 mx-auto rounded-3xl bg-[#FFF7F0] border border-[#FFE7D4] flex items-center justify-center text-[#FF7A00] shadow-sm mb-6">
-        <svg
-          className="w-12 h-12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Friendly Android box */}
-          <rect x="4" y="6" width="16" height="14" rx="4" />
-          <path d="M9 14c1.2 1.5 4.8 1.5 6 0" />
-          <circle cx="9" cy="10" r="1" fill="currentColor" />
-          <circle cx="15" cy="10" r="1" fill="currentColor" />
-          <line x1="8" y1="2" x2="10" y2="6" />
-          <line x1="16" y1="2" x2="14" y2="6" />
-        </svg>
+      {/* Friendly warm illustration with custom logo */}
+      <div className="w-24 h-24 mx-auto rounded-3xl bg-[#FFF7F0] border border-[#FFE7D4] flex items-center justify-center p-3 shadow-xs mb-6 overflow-hidden">
+        <img
+          src="/logo.png"
+          alt="Smile PlayStore"
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-contain"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src =
+              'https://raw.githubusercontent.com/gradiocantilan-IT/LocalDocument/main/orangeware.png';
+          }}
+        />
       </div>
 
       {/* Mandatory exact heading */}
@@ -40,7 +33,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
       {/* Explanation that new apps will appear after administrator approval */}
       <p className="text-sm text-[#6B7280] mt-3 leading-relaxed">
-        Smile Store maintains a strict zero-dummy, cryptographically verified catalog.
+        Smile PlayStore maintains a strict zero-dummy, cryptographically verified catalog.
         New Android applications will appear here as soon as they complete cryptographic signature verification and receive administrator publication approval.
       </p>
 

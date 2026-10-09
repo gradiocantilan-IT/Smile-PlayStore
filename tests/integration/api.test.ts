@@ -16,7 +16,7 @@ describe('Repository & Marketplace State Integrity', () => {
 
   it('retrieves default CMS settings without dummy or hardcoded apps', async () => {
     const cms = await AppRepository.getCmsSettings();
-    expect(cms.siteName).toBe('Smile Store');
+    expect(cms.siteName).toBe('Smile PlayStore');
     expect(cms.tagline).toBe('Android App Marketplace');
     expect(cms.maxUploadSizeMb).toBeGreaterThanOrEqual(50);
   });

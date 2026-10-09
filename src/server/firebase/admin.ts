@@ -45,7 +45,10 @@ export function getFirebaseAdmin(): {
       });
     }
 
-    firestoreDb = getFirestore(firebaseApp);
+    firestoreDb = getFirestore(
+      firebaseApp,
+      'ai-studio-smilestoreandroi-83366cfe-f5e8-4f8b-8b5d-b0c430b762b5'
+    );
     firebaseAuth = getAuth(firebaseApp);
 
     return {

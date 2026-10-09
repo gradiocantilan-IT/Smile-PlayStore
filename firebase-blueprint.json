@@ -1,0 +1,153 @@
+{
+  "entities": {
+    "app": {
+      "title": "Application",
+      "description": "Android application package metadata and cryptographic verification state.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "developerName": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "packageName": { "type": "string" },
+        "versionName": { "type": "string" },
+        "versionCode": { "type": "number" },
+        "iconObjectKey": { "type": "string" },
+        "iconUrl": { "type": "string" },
+        "apkObjectKey": { "type": "string" },
+        "apkSha256": { "type": "string" },
+        "apkSizeBytes": { "type": "number" },
+        "signingCertificateSha256": { "type": "string" },
+        "signatureVerified": { "type": "boolean" },
+        "signatureScheme": { "type": "string" },
+        "permissions": { "type": "array" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "pending", "published", "rejected", "archived"]
+        },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "approvedBy": { "type": "string" },
+        "rejectionReason": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "slug",
+        "title",
+        "developerName",
+        "description",
+        "category",
+        "packageName",
+        "versionName",
+        "versionCode",
+        "apkObjectKey",
+        "apkSha256",
+        "apkSizeBytes",
+        "signatureVerified",
+        "status",
+        "downloadCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "category": {
+      "title": "Category",
+      "description": "Marketplace category derived from published apps.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "appCount": { "type": "number" }
+      },
+      "required": ["id", "name", "slug", "appCount"]
+    },
+    "cmsSettings": {
+      "title": "CMS Settings",
+      "description": "Marketplace settings and administrative boundaries.",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string" },
+        "tagline": { "type": "string" },
+        "announcement": { "type": "string" },
+        "maxUploadSizeMb": { "type": "number" },
+        "allowedCategories": { "type": "array" },
+        "contactEmail": { "type": "string" },
+        "maintenanceMode": { "type": "boolean" },
+        "updatedAt": { "type": "string" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["siteName", "tagline", "maxUploadSizeMb", "allowedCategories", "contactEmail", "maintenanceMode"]
+    },
+    "auditLog": {
+      "title": "Audit Log",
+      "description": "Security-relevant record of an administrative or system action.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "actorEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "targetType": { "type": "string" },
+        "targetId": { "type": "string" },
+        "details": { "type": "object" },
+        "ipAddress": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "actorEmail", "action", "targetType"]
+    },
+    "user": {
+      "title": "User",
+      "description": "Authenticated user profile and role metadata.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "superadmin"] },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "Verified administrator allowlist entry.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "addedAt": { "type": "string" }
+      },
+      "required": ["email", "addedAt"]
+    }
+  },
+  "firestore": {
+    "/apps/{appId}": {
+      "schema": { "$ref": "#/entities/app" },
+      "description": "Collection of Android application packages and verification states."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/category" },
+      "description": "Collection of catalog categories."
+    },
+    "/cmsSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/cmsSettings" },
+      "description": "Global CMS settings for the store."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/auditLog" },
+      "description": "Audit trail of administrator actions and publication events."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/user" },
+      "description": "User profile accounts."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/admin" },
+      "description": "Allowlisted administrator identities."
+    }
+  }
+}
