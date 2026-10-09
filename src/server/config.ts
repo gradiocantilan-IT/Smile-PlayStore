@@ -25,7 +25,7 @@ export interface ServerConfig {
 }
 
 const parseAllowlist = (raw?: string): string[] => {
-  const defaults = ['admin@smilestore.app', 'gradiocantilan@gmail.com'];
+  const defaults = ['gradiocantilan@gmail.com', 'admin@smilestore.app'];
   if (!raw || !raw.trim()) return defaults;
   const parsed = raw
     .split(',')

@@ -23,6 +23,39 @@
   },
   "auditLogs": [
     {
+      "actorEmail": "unauthorized@random.com",
+      "action": "ADMIN_LOGIN_REJECTED_UNAUTHORIZED",
+      "targetType": "auth",
+      "details": {
+        "reason": "Email not present in ADMIN_EMAIL_ALLOWLIST"
+      },
+      "ipAddress": "127.0.0.1",
+      "id": "log_1791588485444_dy9nd9",
+      "timestamp": "2026-10-09T23:28:05.444Z"
+    },
+    {
+      "actorEmail": "gradiocantilan@gmail.com",
+      "action": "ADMIN_LOGIN_SUCCESSFUL",
+      "targetType": "auth",
+      "targetId": "usr_1791588481084_m33zax",
+      "details": {
+        "role": "admin"
+      },
+      "ipAddress": "127.0.0.1",
+      "id": "log_1791588481085_27kjla",
+      "timestamp": "2026-10-09T23:28:01.085Z"
+    },
+    {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791588447634_japitt",
+      "timestamp": "2026-10-09T23:27:27.634Z"
+    },
+    {
       "actorEmail": "test-admin@smilestore.app",
       "action": "TEST_AUDIT_EVENT",
       "targetType": "system",
@@ -163,6 +196,13 @@
       "role": "admin",
       "createdAt": "2026-10-09T21:41:00.106Z",
       "lastLoginAt": "2026-10-09T21:41:00.106Z"
+    },
+    "gradiocantilan@gmail.com": {
+      "uid": "usr_1791588481084_m33zax",
+      "email": "gradiocantilan@gmail.com",
+      "role": "admin",
+      "createdAt": "2026-10-09T23:28:01.084Z",
+      "lastLoginAt": "2026-10-09T23:28:01.084Z"
     }
   }
 }

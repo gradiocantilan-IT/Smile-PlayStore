@@ -1,8 +1,24 @@
+import fs from 'fs';
+import path from 'path';
 import { initializeApp, getApps, cert, type App } from 'firebase-admin/app';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { config } from '../config.ts';
-import firebaseConfig from '../../../firebase-applet-config.json';
+
+let firebaseConfig: {
+  projectId?: string;
+  firestoreDatabaseId?: string;
+  [key: string]: unknown;
+} = {};
+
+try {
+  const configPath = path.resolve(process.cwd(), 'firebase-applet-config.json');
+  if (fs.existsSync(configPath)) {
+    firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  }
+} catch {
+  // Graceful fallback
+}
 
 let firebaseApp: App | null = null;
 let firestoreDb: Firestore | null = null;

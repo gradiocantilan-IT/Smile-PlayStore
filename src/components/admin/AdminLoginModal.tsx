@@ -13,7 +13,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   onClose,
   onLoginSuccess,
 }) => {
-  const [email, setEmail] = useState('admin@smilestore.app');
+  const [email, setEmail] = useState('gradiocantilan@gmail.com');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -178,7 +178,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@smilestore.app"
+                placeholder="gradiocantilan@gmail.com"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E5E7EB] focus:border-[#FF7A00] text-xs font-medium text-[#202124] focus:outline-hidden"
               />
             </div>
@@ -217,7 +217,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
         <div className="mt-6 pt-4 border-t border-[#F3F4F6] text-center">
           <p className="text-[11px] text-[#9CA3AF]">
-            Default allowed: <code className="text-[#6B7280]">admin@smilestore.app</code>, <code className="text-[#6B7280]">gradiocantilan@gmail.com</code>
+            Authorized email: <code className="text-[#FF7A00] font-semibold">gradiocantilan@gmail.com</code> (or <code className="text-[#6B7280]">admin@smilestore.app</code>)
           </p>
         </div>
       </div>
