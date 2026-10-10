@@ -1,12 +1,12 @@
 {
   "projectId": "smile-playstore",
-  "appId": "1:216923981476:web:fb48245cf8c72cb26ec831",
-  "apiKey": "AIzaSyARZmpDzrwFf-Dx1_UVFyTXL2riXaI0rK0",
+  "appId": "1:804420900569:web:fa3d008db85ebfa6c590c8",
+  "apiKey": "AIzaSyAWv-XzmF-F4e_74jfANqhh0EpuTUvK4aM",
   "authDomain": "smile-playstore.firebaseapp.com",
   "firestoreDatabaseId": "ai-studio-smilestoreandroi-83366cfe-f5e8-4f8b-8b5d-b0c430b762b5",
   "storageBucket": "smile-playstore.firebasestorage.app",
-  "messagingSenderId": "216923981476",
-  "measurementId": "",
+  "messagingSenderId": "804420900569",
+  "measurementId": "G-HFC4G070RE",
   "oAuthClientId": "216923981476-talvql78nhs9qcrnl25se2tn4nu470m6.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }

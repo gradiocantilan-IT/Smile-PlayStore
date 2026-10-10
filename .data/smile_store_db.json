@@ -23,6 +23,16 @@
   },
   "auditLogs": [
     {
+      "actorEmail": "test-admin@smilestore.app",
+      "action": "TEST_AUDIT_EVENT",
+      "targetType": "system",
+      "details": {
+        "verified": true
+      },
+      "id": "log_1791594602560_mz982x",
+      "timestamp": "2026-10-10T01:10:02.561Z"
+    },
+    {
       "actorEmail": "unauthorized@random.com",
       "action": "ADMIN_LOGIN_REJECTED_UNAUTHORIZED",
       "targetType": "auth",

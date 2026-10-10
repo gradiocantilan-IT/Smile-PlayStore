@@ -42,8 +42,12 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         body: JSON.stringify({ email: cred.user.email }),
       });
 
+      if (!res.ok) {
+        throw new Error('Access denied (server error)');
+      }
+
       const data = await res.json();
-      if (!res.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.message || data.error || 'Access denied');
       }
 
@@ -69,9 +73,12 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         body: JSON.stringify({ email, password: password || undefined }),
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error('Authentication failed (server error)');
+      }
 
-      if (!res.ok || !data.success) {
+      const data = await res.json();
+      if (!data.success) {
         throw new Error(data.message || data.error || 'Authentication failed');
       }
 

@@ -331,34 +331,39 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
 });
 
 apiRouter.get('/admin/auth/me', async (req: Request, res: Response) => {
-  const session = (req as Request & { adminSession?: SessionPayload }).adminSession;
-  if (!session) {
-    // Check if session can be authenticated
-    const authSession = await requireAdmin(req, res, () => {
-      // passed
-    });
-    // If response was sent by requireAdmin, return
-    if (res.headersSent) return;
-  }
+  try {
+    const session = (req as Request & { adminSession?: SessionPayload }).adminSession;
+    if (!session) {
+      // Check if session can be authenticated
+      await requireAdmin(req, res, () => {
+        // passed
+      });
+      // If response was sent by requireAdmin, return
+      if (res.headersSent) return;
+    }
 
-  const activeSession = (req as Request & { adminSession?: SessionPayload }).adminSession;
-  if (!activeSession) {
-    res.status(401).json({ success: false, error: 'Not authenticated' });
-    return;
-  }
+    const activeSession = (req as Request & { adminSession?: SessionPayload }).adminSession;
+    if (!activeSession) {
+      res.status(401).json({ success: false, error: 'Not authenticated' });
+      return;
+    }
 
-  const user = await AppRepository.getUserByEmail(activeSession.email);
-  res.json({
-    success: true,
-    data: {
-      user: user || {
-        uid: activeSession.uid,
-        email: activeSession.email,
-        role: activeSession.role,
+    const user = await AppRepository.getUserByEmail(activeSession.email);
+    res.json({
+      success: true,
+      data: {
+        user: user || {
+          uid: activeSession.uid,
+          email: activeSession.email,
+          role: activeSession.role,
+        },
+        csrfToken: activeSession.csrfToken,
       },
-      csrfToken: activeSession.csrfToken,
-    },
-  });
+    });
+  } catch (err) {
+    console.error('Error in admin auth me:', err);
+    res.status(500).json({ success: false, error: 'Failed to verify admin session' });
+  }
 });
 
 apiRouter.post('/admin/auth/logout', requireAdmin, async (req: Request, res: Response) => {
