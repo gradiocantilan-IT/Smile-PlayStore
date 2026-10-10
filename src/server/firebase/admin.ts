@@ -154,7 +154,7 @@ export function getFirebaseAdmin(): {
       isConfigured: true,
     };
   } catch (err) {
-    console.warn('Firebase Admin initialization notice:', (err as Error).message);
+    console.error('Detailed Firebase Admin initialization error:', err);
     return {
       app: null,
       db: null,

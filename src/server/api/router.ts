@@ -262,6 +262,7 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
 
   try {
     const { email } = LoginSchema.parse(req.body);
+    console.log('Detailed Login attempt for:', email);
     const normalizedEmail = email.toLowerCase().trim();
 
     if (!isEmailAllowed(normalizedEmail)) {
@@ -284,7 +285,9 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
     resetLoginRateLimit(ip);
 
     // Bootstrap or update user record
+    console.log('Attempting upsert for:', normalizedEmail);
     const adminUser = await AppRepository.upsertUser({ email: normalizedEmail, role: 'admin' });
+    console.log('Upsert successful for:', adminUser.email);
 
     // Generate CSRF token & session token
     const csrfToken = createCsrfToken();
@@ -325,7 +328,7 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
       res.status(400).json({ success: false, error: err.issues[0]?.message || 'Invalid login details' });
       return;
     }
-    console.error('Login error:', err);
+    console.error('Detailed login error:', err);
     res.status(500).json({ success: false, error: 'Login authentication failure' });
   }
 });
