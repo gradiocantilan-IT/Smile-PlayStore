@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import type { Query, DocumentData, Firestore } from 'firebase-admin/firestore';
 import {
   getFirebaseAdmin,
   isFirestoreOperational,
@@ -93,7 +92,7 @@ export class AppRepository {
   /**
    * Safe getter that checks whether Firestore is operational before returning DB client
    */
-  private static async getDb(): Promise<Firestore | null> {
+  private static async getDb(): Promise<any | null> {
     const operational = await isFirestoreOperational();
     if (!operational) return null;
     const { db } = getFirebaseAdmin();
@@ -225,7 +224,7 @@ export class AppRepository {
 
     if (db) {
       try {
-        let query: Query<DocumentData> = db.collection('apps');
+        let query: any = db.collection('apps');
         if (status) {
           query = query.where('status', '==', status);
         }

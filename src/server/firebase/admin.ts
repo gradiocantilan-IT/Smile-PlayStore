@@ -1,9 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { initializeApp, getApps, cert, type App } from 'firebase-admin/app';
-import { getFirestore, type Firestore } from 'firebase-admin/firestore';
-import { getAuth, type Auth } from 'firebase-admin/auth';
 import { config } from '../config.ts';
+import { RestFirestore } from './restClient.ts';
 
 let firebaseConfig: {
   projectId?: string;
@@ -20,9 +18,7 @@ try {
   // Graceful fallback
 }
 
-let firebaseApp: App | null = null;
-let firestoreDb: Firestore | null = null;
-let firebaseAuth: Auth | null = null;
+let firestoreDb: any = null; // Will hold RestFirestore instance
 
 // Track if Cloud Firestore API is active or disabled in the GCP project
 let firestoreApiAvailable = false;
@@ -36,25 +32,7 @@ export function markFirestoreUnavailable(error: unknown): void {
   firestoreApiAvailable = false;
   firestoreDb = null;
   isProbed = true;
-
-  if (
-    errMsg.includes('Cloud Firestore API has not been used') ||
-    errMsg.includes('SERVICE_DISABLED') ||
-    errMsg.includes('PERMISSION_DENIED') ||
-    errMsg.includes('Missing or insufficient permissions')
-  ) {
-    lastDiagnostic = `Cloud Firestore is currently unavailable for project "${config.firebase.projectId}". Operating seamlessly via local persistence.`;
-    if (!warnedApiDisabled) {
-      warnedApiDisabled = true;
-      console.warn(`[Firestore Status] ${lastDiagnostic}`);
-    }
-  } else {
-    lastDiagnostic = errMsg;
-    if (!warnedApiDisabled) {
-      warnedApiDisabled = true;
-      console.warn(`[Firestore Status] Notice: ${errMsg}. Operating via local persistence.`);
-    }
-  }
+  lastDiagnostic = errMsg;
 }
 
 export function shouldAttemptFirestore(): boolean {
@@ -100,16 +78,16 @@ export function getFirestoreDiagnostic(): {
 }
 
 export function getFirebaseAdmin(): {
-  app: App | null;
-  db: Firestore | null;
-  auth: Auth | null;
+  app: any;
+  db: any;
+  auth: any;
   isConfigured: boolean;
 } {
-  if (firebaseApp && firestoreDb && firestoreApiAvailable) {
+  if (firestoreDb && firestoreApiAvailable) {
     return {
-      app: firebaseApp,
+      app: null,
       db: firestoreDb,
-      auth: firebaseAuth,
+      auth: null, // REST client doesn't support Auth
       isConfigured: true,
     };
   }
@@ -124,37 +102,18 @@ export function getFirebaseAdmin(): {
   }
 
   try {
-    const existingApps = getApps();
-    if (existingApps.length > 0) {
-      firebaseApp = existingApps[0]!;
-    } else {
-      firebaseApp = initializeApp({
-        credential: cert({
-          projectId: config.firebase.projectId,
-          clientEmail: config.firebase.clientEmail,
-          privateKey: config.firebase.privateKey,
-        }),
-      });
-    }
-
     if (!firestoreDb && (!isProbed || firestoreApiAvailable)) {
-      if (config.firebase.projectId === firebaseConfig.projectId && firebaseConfig.firestoreDatabaseId) {
-        firestoreDb = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
-      } else {
-        firestoreDb = getFirestore(firebaseApp);
-      }
+      firestoreDb = new RestFirestore(config.firebase.projectId!, firebaseConfig.firestoreDatabaseId || 'default');
     }
-
-    firebaseAuth = getAuth(firebaseApp);
 
     return {
-      app: firebaseApp,
+      app: null,
       db: isProbed && !firestoreApiAvailable ? null : firestoreDb,
-      auth: firebaseAuth,
+      auth: null,
       isConfigured: true,
     };
   } catch (err) {
-    console.error('Detailed Firebase Admin initialization error:', err);
+    console.error('Detailed REST Firestore initialization error:', err);
     return {
       app: null,
       db: null,
