@@ -14,7 +14,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   onLoginSuccess,
 }) => {
   const [email, setEmail] = useState('gradiocantilan@gmail.com');
-  const [password, setPassword] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
       const res = await fetch('/api/v1/admin/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: password || undefined }),
+        body: JSON.stringify({ email, pin }),
       });
 
       if (!res.ok) {
@@ -162,14 +162,14 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-[#202124] mb-1.5">
-              Passphrase / Credential
+              PIN Code
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-3" />
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
                 placeholder="••••••••••••"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E5E7EB] focus:border-[#FF7A00] text-xs font-medium text-[#202124] focus:outline-hidden"
               />

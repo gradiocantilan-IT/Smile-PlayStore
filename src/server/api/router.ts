@@ -244,7 +244,7 @@ apiRouter.post('/contact', async (req: Request, res: Response) => {
 // -----------------------------------------------------------------------------
 const LoginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6).optional(),
+  pin: z.string().min(6),
 });
 
 apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
@@ -261,22 +261,22 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
   }
 
   try {
-    const { email, password } = LoginSchema.parse(req.body);
+    const { email, pin } = LoginSchema.parse(req.body);
     const normalizedEmail = email.toLowerCase().trim();
 
-    if (!isEmailAllowed(normalizedEmail) || password !== config.adminPassword) {
+    if (!isEmailAllowed(normalizedEmail) || pin !== config.adminPin) {
       await AppRepository.addAuditLog({
         actorEmail: normalizedEmail,
         action: 'ADMIN_LOGIN_REJECTED_UNAUTHORIZED',
         targetType: 'auth',
-        details: { reason: 'Email not authorized or incorrect password' },
+        details: { reason: 'Email not authorized or incorrect pin' },
         ipAddress: ip,
       });
 
       res.status(403).json({
         success: false,
         error: 'ACCESS_DENIED',
-        message: 'Invalid email or password.',
+        message: 'Invalid email or pin.',
       });
       return;
     }
