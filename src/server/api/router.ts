@@ -261,23 +261,22 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
   }
 
   try {
-    const { email } = LoginSchema.parse(req.body);
-    console.log('Detailed Login attempt for:', email);
+    const { email, password } = LoginSchema.parse(req.body);
     const normalizedEmail = email.toLowerCase().trim();
 
-    if (!isEmailAllowed(normalizedEmail)) {
+    if (!isEmailAllowed(normalizedEmail) || password !== config.adminPassword) {
       await AppRepository.addAuditLog({
         actorEmail: normalizedEmail,
         action: 'ADMIN_LOGIN_REJECTED_UNAUTHORIZED',
         targetType: 'auth',
-        details: { reason: 'Email not present in ADMIN_EMAIL_ALLOWLIST' },
+        details: { reason: 'Email not authorized or incorrect password' },
         ipAddress: ip,
       });
 
       res.status(403).json({
         success: false,
         error: 'ACCESS_DENIED',
-        message: 'This email is not authorized to access the Smile Store administrative console.',
+        message: 'Invalid email or password.',
       });
       return;
     }
@@ -285,9 +284,7 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
     resetLoginRateLimit(ip);
 
     // Bootstrap or update user record
-    console.log('Attempting upsert for:', normalizedEmail);
     const adminUser = await AppRepository.upsertUser({ email: normalizedEmail, role: 'admin' });
-    console.log('Upsert successful for:', adminUser.email);
 
     // Generate CSRF token & session token
     const csrfToken = createCsrfToken();
@@ -328,7 +325,7 @@ apiRouter.post('/admin/auth/login', async (req: Request, res: Response) => {
       res.status(400).json({ success: false, error: err.issues[0]?.message || 'Invalid login details' });
       return;
     }
-    console.error('Detailed login error:', err);
+    console.error('Login error:', err);
     res.status(500).json({ success: false, error: 'Login authentication failure' });
   }
 });

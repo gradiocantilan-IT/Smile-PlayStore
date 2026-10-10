@@ -8,6 +8,7 @@ export interface ServerConfig {
   sessionSecret: string;
   maxApkSizeMb: number;
   adminEmailAllowlist: string[];
+  adminPassword: string;
   firebase: {
     projectId?: string;
     clientEmail?: string;
@@ -41,6 +42,7 @@ export const config: ServerConfig = {
   sessionSecret: process.env.SESSION_SECRET || 'smile-store-production-session-secret-key-99',
   maxApkSizeMb: Number(process.env.MAX_APK_SIZE_MB) || 150,
   adminEmailAllowlist: parseAllowlist(process.env.ADMIN_EMAIL_ALLOWLIST),
+  adminPassword: process.env.ADMIN_PASSWORD || 'password123',
   firebase: {
     projectId: process.env.FIREBASE_PROJECT_ID || 'smile-playstore',
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,

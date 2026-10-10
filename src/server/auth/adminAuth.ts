@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '../config.ts';
 import { AppRepository } from '../repositories/firestore.ts';
-import { getFirebaseAdmin } from '../firebase/admin.ts';
 
 function parseCookies(cookieHeader?: string): Record<string, string> {
   const list: Record<string, string> = {};
@@ -118,30 +117,9 @@ export async function authenticateAdminRequest(req: Request): Promise<SessionPay
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const rawToken = authHeader.substring(7).trim();
-
-    // Try custom session token first
+    // Try custom session token
     const customSession = verifySessionToken(rawToken);
     if (customSession) return customSession;
-
-    // Try Firebase ID token verification if Firebase Admin is configured
-    const { auth } = getFirebaseAdmin();
-    if (auth) {
-      try {
-        const decoded = await auth.verifyIdToken(rawToken);
-        if (decoded.email && isEmailAllowed(decoded.email)) {
-          return {
-            uid: decoded.uid,
-            email: decoded.email,
-            role: 'admin',
-            csrfToken: 'firebase-bearer-authenticated',
-            iat: decoded.iat,
-            exp: decoded.exp,
-          };
-        }
-      } catch {
-        // Continue to cookie check
-      }
-    }
   }
 
   // 2. Check HttpOnly cookie
