@@ -29,6 +29,12 @@ async function startServer() {
   // API router
   app.use('/api/v1', apiRouter);
 
+  // Global error handler
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    console.error('Global Error Handler:', err);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  });
+
   // Vite integration
   if (!isProduction) {
     const { createServer: createViteServer } = await import('vite');
