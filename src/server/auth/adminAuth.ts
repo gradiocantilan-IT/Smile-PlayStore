@@ -113,16 +113,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
  * Verifies either Firebase ID token or server session token
  */
 export async function authenticateAdminRequest(req: Request): Promise<SessionPayload | null> {
-  // 1. Check Authorization Bearer header
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const rawToken = authHeader.substring(7).trim();
-    // Try custom session token
-    const customSession = verifySessionToken(rawToken);
-    if (customSession) return customSession;
-  }
-
-  // 2. Check HttpOnly cookie
+  // 1. Check HttpOnly cookie
   const cookieHeader = req.headers.cookie;
   if (cookieHeader) {
     const cookies = parseCookies(cookieHeader);
